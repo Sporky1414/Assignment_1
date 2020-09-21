@@ -1,3 +1,11 @@
+/*
+  Name: AJ Keenan
+  Student ID: 2316808
+  Class Name: CPSC 350: Data Structures and Algorithms
+  Class Section: 2
+  Assignment Name: Assignment 1
+*/
+
 #include <iostream>
 #include <cmath>
 #include <string>
@@ -12,8 +20,15 @@ class DataHandler {
     void calculateDataFromString(string sequence, int sequenceCounter);
     void finalizeData();
     string dataToString();
-
+    int getSumOfLengths();
+    float getMeanOfLengths();
+    float getStandardDevOfLengths();
+    float getRelProbA();
+    float getRelProbC();
+    float getRelProbT();
+    float getRelProbG();
     //data points
+  private:
     int sumOfLength;
     float meanOfLength;
     float varianceOfLength;
@@ -61,7 +76,6 @@ class DataHandler {
     float relProbGG;
     string fullMergedSequences;
 
-  private:
     string ensureEvenLength(string sequence, int sequenceCounter);
     bool checkIfValidString(string sequence);
 };

@@ -1,3 +1,11 @@
+/*
+  Name: AJ Keenan
+  Student ID: 2316808
+  Class Name: CPSC 350: Data Structures and Algorithms
+  Class Section: 2
+  Assignment Name: Assignment 1
+*/
+
 #include "DataHandler.h"
 
 DataHandler::DataHandler() {
@@ -58,7 +66,6 @@ void DataHandler::calculateDataFromString(string sequence, int sequenceCounter) 
     cout << "ERROR: Line " << sequenceCounter << " in the file has bad data or is blank. Skipping this line." <<  "\n" << endl;
     return;
   }
-  sequence = ensureEvenLength(sequence, sequenceCounter);
   numOfStrings++;
   fullMergedSequences += sequence + "_";
   sumOfLength += sequence.length();
@@ -77,6 +84,7 @@ void DataHandler::calculateDataFromString(string sequence, int sequenceCounter) 
         numOfG++;
         break;
     }
+    sequence = ensureEvenLength(sequence, sequenceCounter);
     if(i != 0 && i % 2 == 1) {
       string bigram = sequence.substr(i - 1, 2);
       if(bigram == "AA") {
@@ -162,7 +170,7 @@ string DataHandler::ensureEvenLength(string sequence, int sequenceCounter) {
   if(sequence.length() % 2 == 0) {
     return sequence;
   } else {
-    cout << "Sequence " << sequenceCounter << " has an odd length. Adding an extra " << sequence[0] << " nucleotide to sequence." << endl;
+    cout << "Sequence " << sequenceCounter << " has an odd length. Adding an extra " << sequence[0] << " nucleotide to sequence for bigram probability calculations." << endl;
     cout << "Old Sequence: " << sequence << endl;
     string temp = sequence + sequence[0];
     cout << "New Sequence: " << temp <<  "\n" << endl;
@@ -183,7 +191,7 @@ bool DataHandler::checkIfValidString(string sequence) {
 }
 
 string DataHandler::dataToString() {
-  string temp = "\nSum: " + to_string(sumOfLength) +'\n';
+  string temp = "\nSum of DNA Sequence Lengths in File: " + to_string(sumOfLength) +'\n';
   temp +=  "Mean of DNA Sequence Lengths in File: " + to_string(meanOfLength) + '\n';
   temp += "Variance of DNA Sequence Lengths in File: " + to_string(varianceOfLength) + '\n';
   temp += "Standard Deviation of DNA Sequence Lengths in File: " + to_string(standardDevOfLength) + '\n';
@@ -208,4 +216,32 @@ string DataHandler::dataToString() {
   temp += "Probability of TG in DNA Sequences: " + to_string(relProbTG) + '\n';
   temp += "Probability of TT in DNA Sequences: " + to_string(relProbTT) + '\n';
   return temp;
+}
+
+int DataHandler::getSumOfLengths() {
+  return sumOfLength;
+}
+
+float DataHandler::getMeanOfLengths() {
+  return meanOfLength;
+}
+
+float DataHandler::getStandardDevOfLengths() {
+  return standardDevOfLength;
+}
+
+float DataHandler::getRelProbA() {
+  return relProbA;
+}
+
+float DataHandler::getRelProbC() {
+  return relProbC;
+}
+
+float DataHandler::getRelProbG() {
+  return relProbG;
+}
+
+float DataHandler::getRelProbT() {
+  return relProbT;
 }

@@ -1,3 +1,11 @@
+/*
+  Name: AJ Keenan
+  Student ID: 2316808
+  Class Name: CPSC 350: Data Structures and Algorithms
+  Class Section: 2
+  Assignment Name: Assignment 1
+*/
+
 #include <iostream>
 #include <fstream>
 
