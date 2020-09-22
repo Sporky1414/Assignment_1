@@ -2,7 +2,7 @@
 1. AJ Keenan
 1. Student ID: 2316808
 1. akeenan@chapman.edu
-1. CPSC 353-01
+1. CPSC 350-02
 1. Assignment: Assignment 1
 
 ## Application Purpose
