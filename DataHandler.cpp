@@ -8,6 +8,7 @@
 
 #include "DataHandler.h"
 
+//Creates the DataHandler object and initalizes all variables to 0. It will also initialze the "fullMergedSequences" variable to null.
 DataHandler::DataHandler() {
   int sumOfLength = 0;
   float meanOfLength = 0;
@@ -57,19 +58,27 @@ DataHandler::DataHandler() {
   string fullMergedSequences = "";
 }
 
+//Destructor for Class.
 DataHandler::~DataHandler() {
 
 }
 
+//Takes in Data from the string and calculates data that can be calculated without knowing the rest of the sequences.
 void DataHandler::calculateDataFromString(string sequence, int sequenceCounter) {
+  //Checks if the sequence passed through is a valid sequence of DNA Nucleotides. If it is not, the method will terminate and skip the invalid sequence.
   if(!checkIfValidString(sequence)) {
-    cout << "ERROR: Line " << sequenceCounter << " in the file has bad data or is blank. Skipping this line." <<  "\n" << endl;
+    cout << "ERROR: Line " << sequenceCounter << " in the file has bad data or is blank. Skipping this line." << endl;
     return;
   }
+  //Adds to the number of DNA sequences that have been counted. Used for the mean calcuation.
   numOfStrings++;
+  //Seperates sequences in the "fullMergedSequences" variable by an underscore. The sequences must be searched twice in order to get data that was impossible to get without the mean.
   fullMergedSequences += sequence + "_";
+  //Increments sumOfLength by the current sequence's length.
   sumOfLength += sequence.length();
+  //Iterates through sequence to determine which nucleotides and bigrams are present and count them as such.
   for(int i = 0; i < sequence.length(); ++i) {
+    //Counts the nucleotides
     switch (sequence[i]) {
       case 'A':
         numOfA++;
@@ -84,7 +93,9 @@ void DataHandler::calculateDataFromString(string sequence, int sequenceCounter) 
         numOfG++;
         break;
     }
+    //Ensures the sequence being passed through is even before checking for bigrams.
     sequence = ensureEvenLength(sequence, sequenceCounter);
+    //Counts the bigrams present.
     if(i != 0 && i % 2 == 1) {
       string bigram = sequence.substr(i - 1, 2);
       if(bigram == "AA") {
@@ -124,13 +135,16 @@ void DataHandler::calculateDataFromString(string sequence, int sequenceCounter) 
   }
 }
 
+//Calculates data that could not be calculated until are DNA sequences have been accounted for.
 void DataHandler::finalizeData() {
+  //Mean is calculated
   meanOfLength = float(sumOfLength)/numOfStrings;
-  //Variance, Standard Deviation, and Setup for Probabilities
+  //Preps for second iteration of DNA sequences by initalizing needed intermediary variables for the calculations.
   int tempLength = 0;
   int totalNucleotides = 0;
   float varianceNum = 0;
   float lengthMeanDistance = 0;
+  //Iterates through all DNA sequences, now that the mean has been calculated, to determine the variance and the total number of nucleotides.
   for(int i = 0; i < fullMergedSequences.length(); ++i) {
     if(fullMergedSequences[i] != '_') {
       tempLength++;
@@ -141,13 +155,18 @@ void DataHandler::finalizeData() {
       tempLength = 0;
     }
   }
+  //Calculates the total number of bigrams for the probability calculations.
   int numOfBigrams = numOfAA + numOfAC + numOfAG + numOfAT + numOfCA + numOfCC + numOfCG + numOfCT + numOfGA + numOfGC + numOfGG + numOfGT + numOfTA + numOfTC + numOfTG + numOfTT;
+  //Calculates the variance
   varianceOfLength = varianceNum/numOfStrings;
+  //Calculates standard deviation using the variance, since the standard deviation is the square root of the variance.
   standardDevOfLength = sqrt(varianceOfLength);
+  //Calculates the propability of each nucleotide appearing in the entire file.
   relProbA = float(numOfA)/totalNucleotides;
   relProbC = float(numOfC)/totalNucleotides;
   relProbG = float(numOfG)/totalNucleotides;
   relProbT = float(numOfT)/totalNucleotides;
+  //Calculates the probability of each bigram appearing in the entire file.
   relProbAA = float(numOfAA)/numOfBigrams;
   relProbAC = float(numOfAC)/numOfBigrams;
   relProbAG = float(numOfAG)/numOfBigrams;
@@ -166,30 +185,36 @@ void DataHandler::finalizeData() {
   relProbTT = float(numOfTT)/numOfBigrams;
 }
 
+//Adjusts a DNA sequence if needed to be even in order to properly count bigrams.
 string DataHandler::ensureEvenLength(string sequence, int sequenceCounter) {
+  //Even-length sequences are ignored and are not touched.
   if(sequence.length() % 2 == 0) {
     return sequence;
+  //User is alerted that an odd-length sequence has been found, then adjusts the sequence to be even by appending the first character of the sequence to the end.
   } else {
     cout << "Sequence " << sequenceCounter << " has an odd length. Adding an extra " << sequence[0] << " nucleotide to sequence for bigram probability calculations." << endl;
-    cout << "Old Sequence: " << sequence << endl;
     string temp = sequence + sequence[0];
-    cout << "New Sequence: " << temp <<  "\n" << endl;
     return temp;
   }
 }
 
+//Checks if the DNA sequence does not have any illegal characters
 bool DataHandler::checkIfValidString(string sequence) {
+  //If the sequence is empty, the sequence is not valid.
   if(sequence.length() < 1) {
     return false;
   }
+  //Iterates through sequence to check for invalid characters. If an invalid character is found, the method returns false.
   for(int i = 0; i < sequence.length(); ++i) {
     if(sequence[i] != 'A' && sequence[i] != 'C' && sequence[i] != 'T' && sequence[i] != 'G') {
       return false;
     }
   }
+  //Since the sequence would have passed both tests to be valid if the function makes it to this point, the sequence is valid and "true" is returned.
   return true;
 }
 
+//Compacts all data from the DataHandler calculations into one string and returns it.
 string DataHandler::dataToString() {
   string temp = "\nSum of DNA Sequence Lengths in File: " + to_string(sumOfLength) +'\n';
   temp +=  "Mean of DNA Sequence Lengths in File: " + to_string(meanOfLength) + '\n';
@@ -218,30 +243,37 @@ string DataHandler::dataToString() {
   return temp;
 }
 
+//Getter for sumOfLength.
 int DataHandler::getSumOfLengths() {
   return sumOfLength;
 }
 
+//Getter for meanOfLength.
 float DataHandler::getMeanOfLengths() {
   return meanOfLength;
 }
 
+//Getter for standardDevOfLength.
 float DataHandler::getStandardDevOfLengths() {
   return standardDevOfLength;
 }
 
+//Getter for relProbA.
 float DataHandler::getRelProbA() {
   return relProbA;
 }
 
+//Getter for relProbC.
 float DataHandler::getRelProbC() {
   return relProbC;
 }
 
+//Getter for relProbG.
 float DataHandler::getRelProbG() {
   return relProbG;
 }
 
+//Getter for relProbT.
 float DataHandler::getRelProbT() {
   return relProbT;
 }

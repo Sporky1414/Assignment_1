@@ -6,6 +6,9 @@
   Assignment Name: Assignment 1
 */
 
+//Header file for the DataHandler class, which takes in the DNA sequences from the file and calculates data points based off the sequences.
+
+//Includes libraries for user input, math, and the string methods.
 #include <iostream>
 #include <cmath>
 #include <string>
@@ -14,12 +17,18 @@ using namespace std;
 
 class DataHandler {
   public:
+    //Constructor/Destructor
     DataHandler();
     ~DataHandler();
 
+    //Methods to calculate data
     void calculateDataFromString(string sequence, int sequenceCounter);
     void finalizeData();
+
+    //Method to output the data as a string
     string dataToString();
+
+    //Getter methods for variables that are needed outside of DataHandler
     int getSumOfLengths();
     float getMeanOfLengths();
     float getStandardDevOfLengths();
@@ -27,8 +36,9 @@ class DataHandler {
     float getRelProbC();
     float getRelProbT();
     float getRelProbG();
-    //data points
+
   private:
+    //Private data points needed for all calcuations
     int sumOfLength;
     float meanOfLength;
     float varianceOfLength;
@@ -76,6 +86,7 @@ class DataHandler {
     float relProbGG;
     string fullMergedSequences;
 
+    //Methods to check for issues with a DNA sequence
     string ensureEvenLength(string sequence, int sequenceCounter);
     bool checkIfValidString(string sequence);
 };
